@@ -1,0 +1,19 @@
+<script>
+	import { Calendar as CalendarPrimitive } from "bits-ui";
+	import { cn } from "#lib/shared/utils/cn.js";
+
+	let {
+		ref = $bindable(null),
+		class: className = undefined,
+		...restProps
+	} = $props();
+</script>
+
+<CalendarPrimitive.Header
+	bind:ref
+	class={cn(
+		"flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium",
+		className
+	)}
+	{...restProps}
+/>
