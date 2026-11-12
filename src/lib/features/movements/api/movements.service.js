@@ -77,22 +77,25 @@ export async function fetchRecentMovements(limit = 6) {
 }
 
 /**
- * Historial de salidas de un producto, para estimar su ritmo de venta.
- * Se pide por producto y acotado en el tiempo, en vez de traer todo.
+ * Historial reciente de varios productos, en una sola consulta.
+ * Lo usa la pantalla de vencimientos para estimar el ritmo de venta de cada
+ * lote: sin esto tendría que traer el historial entero o pedir uno por lote.
  *
- * @param {number | string} productId
+ * @param {(number | string)[]} productIds
  * @param {number} [windowDays]
  * @returns {Promise<Movement[]>}
  */
-export async function fetchProductHistory(productId, windowDays = 90) {
+export async function fetchHistoryForProducts(productIds, windowDays = 90) {
+	if (productIds.length === 0) return [];
+
 	const since = new Date(Date.now() - windowDays * 86400000).toISOString();
 	const response = await getClient()
 		.from(VIEW)
 		.select('*')
-		.eq('product_id', productId)
+		.in('product_id', productIds)
 		.gte('created_at', since)
 		.order('created_at', { ascending: false });
-	const rows = unwrap(response, 'No se pudo leer el historial del producto.') ?? [];
+	const rows = unwrap(response, 'No se pudo leer el historial de los productos.') ?? [];
 	return rows.map(normalizeMovement);
 }
 
