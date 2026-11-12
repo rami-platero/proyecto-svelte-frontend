@@ -4,7 +4,7 @@
 	import { Button } from '#lib/shared/components/ui/button/index.js';
 	import { formatDate, formatUnits } from '#lib/shared/utils/format.js';
 	import { productById } from '#lib/features/products/state/products.svelte.js';
-	import { movements } from '#lib/features/movements/state/movements.svelte.js';
+	import { batches } from '../state/batches.svelte.js';
 	import { getExpiryStatus } from '../domain/expiry.js';
 	import ExpiryBadge from './ExpiryBadge.svelte';
 	import PromoAdviceCard from './PromoAdviceCard.svelte';
@@ -43,5 +43,5 @@
 		{/if}
 	</div>
 
-	<PromoAdviceCard {batch} {product} movements={movements.items} />
+	<PromoAdviceCard {batch} {product} movements={batches.history} />
 </li>

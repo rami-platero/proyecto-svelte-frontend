@@ -1,9 +1,16 @@
 /** @import { Batch, BatchQuery } from '../types.js' */
 import { load } from '#lib/shared/state/status.svelte.js';
+import { fetchHistoryForProducts } from '#lib/features/movements/api/movements.service.js';
 import { fetchBatchesOf, fetchExpiringBatches } from '../api/batches.service.js';
 
-/** @type {{ items: Batch[], total: number }} */
-export const batches = $state({ items: [], total: 0 });
+/**
+ * `history` son las salidas recientes de los productos de la página actual:
+ * la sugerencia de promoción necesita el ritmo de venta real de cada uno, y
+ * el listado de movimientos ya no lo tiene entero en memoria.
+ *
+ * @type {{ items: Batch[], total: number, history: import('#lib/features/movements/types.js').Movement[] }}
+ */
+export const batches = $state({ items: [], total: 0, history: [] });
 
 /**
  * @param {BatchQuery} [query]
@@ -16,10 +23,18 @@ export async function loadExpiringBatches(query = {}, { silent = false } = {}) {
 		silent
 	});
 
-	if (result) {
-		batches.items = result.items;
-		batches.total = result.total;
-	}
+	if (!result) return;
+
+	batches.items = result.items;
+	batches.total = result.total;
+
+	// Una sola consulta para el historial de todos los productos visibles.
+	const productIds = [...new Set(result.items.map((batch) => batch.product_id))];
+	const history = await load(() => fetchHistoryForProducts(productIds), {
+		fallback: 'No se pudo leer el historial de ventas.',
+		silent: true
+	});
+	batches.history = history ?? [];
 }
 
 /**
