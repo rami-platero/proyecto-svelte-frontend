@@ -1,9 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="text-scale" content="scale" />
+		<meta name="description" content="Gestion de inventario de stock con alertas de reposicion." />
+		<script>
+			try {
+				const guardado = localStorage.getItem('mode-watcher-mode');
+				const oscuro =
+					guardado === 'dark' ||
+					((guardado === null || guardado === 'system') &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches);
+				if (oscuro) {
+					document.documentElement.classList.add('dark');
+					document.documentElement.style.colorScheme = 'dark';
+				}
+			} catch (error) {
+				void error;
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

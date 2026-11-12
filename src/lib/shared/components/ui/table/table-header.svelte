@@ -1,0 +1,18 @@
+<script>
+	import { cn } from "#lib/shared/utils/cn.js";
+	let {
+		ref = $bindable(null),
+		class: className = undefined,
+		children = undefined,
+		...restProps
+	} = $props();
+</script>
+
+<thead
+	bind:this={ref}
+	data-slot="table-header"
+	class={cn("[&_tr]:border-b", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</thead>

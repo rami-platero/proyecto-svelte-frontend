@@ -1,0 +1,18 @@
+<script>
+	import { cn } from "#lib/shared/utils/cn.js";
+	let {
+		ref = $bindable(null),
+		class: className = undefined,
+		children = undefined,
+		...restProps
+	} = $props();
+</script>
+
+<div
+	bind:this={ref}
+	data-slot="select-label"
+	class={cn("text-muted-foreground px-2 py-1.5 text-xs", className)}
+	{...restProps}
+>
+	{@render children?.()}
+</div>
